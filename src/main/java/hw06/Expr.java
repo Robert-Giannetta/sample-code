@@ -35,9 +35,16 @@ record Expr(String text) {
                 continue;
             }
 
-            // TODO:
-            // if (ch.equals(")")) {
-            //   ...
+        
+            if (ch.equals(")")) {
+                String a2 = stack.pop();
+                String op = stack.pop();
+                String a1 = stack.pop();
+
+
+                String result = applyOp(a1, op, a2);
+                stack.push(result);
+            }
         }
 
         try {
@@ -48,7 +55,7 @@ record Expr(String text) {
             throw new RuntimeException("expected number: " + ee.toString());
         }
     }
-
+    
     static boolean isSpace(String xx) {
         return xx != null && Pattern.matches("^\\s+$", xx);
     }
@@ -61,7 +68,7 @@ record Expr(String text) {
         String ops = "+-*/";
         return xx != null && ops.contains(xx); 
     }
-
+    
     static String applyOp(String a1, String op, String a2) {
         //System.out.printf("applyOp(%s %s %s)\n", a1, op, a2);
         try {
@@ -87,12 +94,12 @@ record Expr(String text) {
             dumpStack();
             throw new RuntimeException("bad operator: " + op);
         }
-        catch (NumberFormatException ee) {
+      catch (NumberFormatException ee) {
             dumpStack();
             throw new RuntimeException("bad number: " + ee.toString());
         }
     }
-
+    
     static void dumpStack() {
         var xs = new ArrayList(stack);
         Collections.reverse(xs);
@@ -101,3 +108,4 @@ record Expr(String text) {
         }
     }
 }
+
